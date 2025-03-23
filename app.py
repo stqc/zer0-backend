@@ -113,7 +113,7 @@ def perform_action():
         db.session.rollback()
         return jsonify({'error': str(e)}), 500
 
-@app.route('api/v1/get_points/<address>', methods=['GET'])
+@app.route('/api/v1/get_points/<address>', methods=['GET'])
 def get_points(address):
     address = address.lower()
     record = Points.query.filter_by(address=address).first()
@@ -123,7 +123,7 @@ def get_points(address):
     
     return jsonify({'address': address, 'points': record.points}), 200
 
-@app.route('api/v1/leaderboard', methods=['GET'])
+@app.route('/api/v1/leaderboard', methods=['GET'])
 def leaderboard():
     limit = request.args.get('limit', 10, type=int)
     offset = request.args.get('offset', 0, type=int)
