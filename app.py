@@ -14,8 +14,11 @@ load_dotenv()
 
 w3 = Web3(Web3.HTTPProvider(os.environ.get('WEB3_PROVIDER_URI')))
 
-FACTORY = os.environ.get('FACTORY')
-ROUTER = os.environ.get('ROUTER')
+FACTORY = os.environ.get('FACTORY').lower()
+ROUTER = os.environ.get('ROUTER').lower()
+MULTI=os.environ.get('MULTI').lower()
+NFTPOSITIOM=os.environ.get('NFTPOSITIOM').lower()
+QUOTER=os.environ.get('QUOTER').lower()
 
 app = Flask(__name__)
 
@@ -85,7 +88,7 @@ def perform_action():
     
     tx_hash = data['tx_hash'].lower()
     
-    is_valid, error_message, sender_address = validate_transaction(tx_hash,w3,[FACTORY,ROUTER])
+    is_valid, error_message, sender_address = validate_transaction(tx_hash,w3,[FACTORY,ROUTER,MULTI,NFTPOSITIOM,QUOTER])
     
     if not is_valid:
         return jsonify({'error': error_message}), 400

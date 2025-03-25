@@ -20,8 +20,8 @@ def validate_transaction(tx_hash,w3,TARGET_CONTRACT_ADDRESS):
         if receipt.status != 1:
             return False, "Transaction failed", None
             
-        
-        if tx.to is None or tx.to not in TARGET_CONTRACT_ADDRESS:
+        print(tx.to)
+        if tx.to is None or tx.to.lower() not in TARGET_CONTRACT_ADDRESS:
             return False, f"Transaction does not interact with the target contract", None
             
         block = w3.eth.get_block(tx.blockNumber)
