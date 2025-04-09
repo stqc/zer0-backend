@@ -9,6 +9,8 @@ from web3 import Web3
 from dotenv import load_dotenv
 from config import validate_transaction
 from flask_migrate import Migrate
+from flask_cors import CORS, cross_origin
+
 
 load_dotenv()
 
@@ -26,7 +28,8 @@ base = os.path.abspath(os.path.dirname(__file__))
 app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{os.path.join(base,"points.db")}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {'connect_args': {'timeout': 15}}
-
+cors = CORS(app) # allow CORS for all domains on all routes.
+app.config['CORS_HEADERS'] = 'Content-Type'
 db = SQLAlchemy(app)
 Migrate(app, db)
 
@@ -51,6 +54,7 @@ with app.app_context():
 
 
 @app.route('/api/v1/get_all_tokens', methods=['GET'])
+@cross_origin()
 def get_all_tokens():
     return jsonify([
             {
@@ -77,6 +81,7 @@ def get_all_tokens():
     )
 
 @app.route('/api/v1/perform_action', methods=['POST'])
+@cross_origin()
 def perform_action():
     data = request.get_json()
     
@@ -117,6 +122,7 @@ def perform_action():
         return jsonify({'error': str(e)}), 500
 
 @app.route('/api/v1/get_points/<address>', methods=['GET'])
+@cross_origin()
 def get_points(address):
     address = address.lower()
     record = Points.query.filter_by(address=address).first()
@@ -127,6 +133,7 @@ def get_points(address):
     return jsonify({'address': address, 'points': record.points}), 200
 
 @app.route('/api/v1/leaderboard', methods=['GET'])
+@cross_origin()
 def leaderboard():
     limit = request.args.get('limit', 10, type=int)
     offset = request.args.get('offset', 0, type=int)
